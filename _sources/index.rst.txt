@@ -1,0 +1,19 @@
+.. jajapro documentation master file, created by
+   sphinx-quickstart on Mon Jan 16 19:02:29 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+jajagacchiのアルゴリズム道具箱
+===================================
+競技プログラミングやり始めたはいいけど、右も左もわかんない。道具がなけりゃ始まらないということで勉強したアルゴリズムを道具箱に入れていくことにした。
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+   :numbered:
+
+   fullsearch
+   graph
+   mod
+   integer

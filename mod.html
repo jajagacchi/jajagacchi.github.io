@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. 剰余演算 &#8212; jajapro 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. 整数論に関係したアルゴリズム" href="integer.html" />
+    <link rel="prev" title="2. グラフ関係のアルゴリズム" href="graph.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="integer.html" title="4. 整数論に関係したアルゴリズム"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="2. グラフ関係のアルゴリズム"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>3. 剰余演算<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>競技プログラミングではしばしば剰余演算が必要となる。ここでその基本をまとめておく。</p>
+<div class="section" id="id2">
+<h2>3.1. 剰余演算の基本的性質<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>次のような性質が成り立つ。</p>
+<div class="math">
+\begin{eqnarray*}
+(a\%p)\%p &amp;=&amp; a\%p\\
+(ab)\%p &amp;=&amp; \{(a\%p)×(b\%p)\}\%p = \{(a\%p)×b\}\%p\\
+(a+b)\%p &amp;=&amp; \{(a\%p)+(b\%p)\}\%p = \{(a\%p)+b\}\%p
+\end{eqnarray*}</div><p>%p%p = %pと捉えて%pをくくり出しているようにみれば覚えやすいかもしれない。</p>
+<p>積、和が3つ以上の場合は注意を要する。</p>
+<div class="math">
+\[
+(abc)\%p = \{(ab)\%p×(c\%p)\}\%p = \{(ab)\%p×c\}\%p = [\{(a\%p)×b\}\%p×c]\%p
+\]</div><p>aの剰余をとる <span class="math">\(\to\)</span> bを掛けて更に剰余をとる <span class="math">\(\to\)</span> cをかけて更に剰余をとる、の手順でok。4つ以上も同じ。</p>
+<p>割り算についてはさらに注意が必要である。 <span class="math">\((a/b)\%p = (ab^{-1})\%p\)</span> と書けるが、 <span class="math">\(b^{-1}\)</span> は通常の逆元ではない。逆元は</p>
+<div class="math">
+\[(ax)\%p = 1\%p\]</div>
+<p>を満たすxがaの逆元として定義される。
+逆元はフェルマーの小定理を用いて計算することが出来る。</p>
+<p>フェルマーの小定理より</p>
+<div class="math">
+\[a^{p-1}\%p = aa^{p-2}\%p= 1\%p\]</div>
+<p>であり、これから</p>
+<div class="math">
+\[a^{-1}\%p = a^{p-2}\%p\]</div>
+<p>となる。すなわち</p>
+<div class="math">
+\[(a/b)\%p = \{(a\%p)\times (b^{p-2})\%p\}\%p\]</div>
+<p>と、積に帰着できる。</p>
+<p>例えば <span class="math">\(143/13\%7 = (143\times 13^5)\%7\)</span> となるわけである。</p>
+<ul class="simple">
+<li><span class="math">\(2^N\%(10^9+7)\)</span> を求める例</li>
+</ul>
+<blockquote>
+<div><div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MOD</span> <span class="o">=</span> <span class="mi">1000000007</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">long</span> <span class="kt">long</span> <span class="n">N</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">N</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ans</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+		<span class="n">ans</span> <span class="o">%=</span> <span class="n">MOD</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3. 剰余演算</a><ul>
+<li><a class="reference internal" href="#id2">3.1. 剰余演算の基本的性質</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="graph.html"
+                        title="previous chapter">2. グラフ関係のアルゴリズム</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="integer.html"
+                        title="next chapter">4. 整数論に関係したアルゴリズム</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/mod.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="integer.html" title="4. 整数論に関係したアルゴリズム"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="graph.html" title="2. グラフ関係のアルゴリズム"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, jajagacchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
