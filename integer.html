@@ -58,8 +58,8 @@
 <p>エラトステネスのふるいはあるNまでの素数を列挙するアルゴリズムである。</p>
 <p>最初に2を素数として、その後の2の倍数を削除していく。次に残った3についても3の
 倍数を削除していく。次に残っているのは5で同じようにする。これを繰り返すだけである。</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">エラトステネスのふるい</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">エラトステネスのふるい</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
@@ -106,8 +106,8 @@
 <h3>4.2.1. 試し割り法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>非常にシンプルな方法である。
 Nを素因数分解したいとき <span class="math">\(\sqrt N\)</span> までの整数で割りきれるか試していく。割りきれた場合、その数で割りきれなくなるまでひたすら割りつづける。割れずに残った数も素因数であることに注意。</p>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">試し割り法</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">試し割り法</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
@@ -141,6 +141,38 @@ Nを素因数分解したいとき <span class="math">\(\sqrt N\)</span> まで�
 </div>
 <div class="section" id="id6">
 <h2>4.3. 約数の列挙<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>4.3.1. 試し割り法<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>約数の列挙についても試し割りしていくことで可能である。Nの約数を列挙する場合、iが約数である場合、N/iも約数であることに注意。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">enum_div</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span><span class="c1">//nの約数を列挙</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span> <span class="p">;</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">!=</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">!=</span><span class="n">n</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">enum_div</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+	<span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">r</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -161,7 +193,10 @@ Nを素因数分解したいとき <span class="math">\(\sqrt N\)</span> まで�
 <li><a class="reference internal" href="#id5">4.2.1. 試し割り法</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id6">4.3. 約数の列挙</a></li>
+<li><a class="reference internal" href="#id6">4.3. 約数の列挙</a><ul>
+<li><a class="reference internal" href="#id7">4.3.1. 試し割り法</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
