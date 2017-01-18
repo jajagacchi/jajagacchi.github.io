@@ -9,7 +9,7 @@
 次のコードはyukicoder No.51の解答例である。
 
 .. literalinclude:: cpp/overflow/main.cpp
- :caption: :math:`1 \geq W \geq 10^5, 1 \geq D \geq 10^5`
+ :caption: :math:`1 \leq W \leq 10^5, 1 \leq D \leq 10^5`
 
 このコードはオーバーフローすることがある。
 
