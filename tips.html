@@ -77,6 +77,10 @@
 </div>
 <p>は全てint型から成るので、この一時的な結果はint型として保存される。しかし、この計算結果は最悪の場合int型の範囲を越えるためオーバーフローする場合がある。</p>
 <p>オーバーフローさせないためにはDまたはiをlong long型にすればよい。</p>
+<p>もう面倒くさいときは次のマクロ使っちゃえ(笑)</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#define int long long</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id2">
 <h2>5.2. 小数点切り上げ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
