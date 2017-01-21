@@ -10,11 +10,11 @@ jajagacchiのアルゴリズム道具箱
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :numbered:
 
    fullsearch
    graph
    mod
    integer
-   careful
+   tips 
