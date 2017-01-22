@@ -53,8 +53,8 @@
 <div class="section" id="id1">
 <h2>5.1. オーバーフローに注意<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>次のコードはyukicoder No.51の解答例である。</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -125,6 +125,17 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="std-vector">
+<h2>5.5. std::vector<a class="headerlink" href="#std-vector" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>5.5.1. 特定の値を削除する<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>erase-removeイディオムと呼ばれる方法が使える。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">100</span><span class="p">),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span><span class="c1">//100に一致する要素を削除する。</span>
+</pre></div>
+</div>
+<p>std::removeは要素の削除を行わない。指定した値に一致する要素をコンテナの末尾に移動してその先頭iteratorを返すだけである。std::vector::eraseは指定した範囲を実際に削除する。このため上述のコードは所望の動作をする。</p>
+</div>
+</div>
 </div>
 
 
@@ -144,6 +155,10 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#unsigned-int">5.4. unsigned intの桁数取得</a></li>
+<li><a class="reference internal" href="#std-vector">5.5. std::vector</a><ul>
+<li><a class="reference internal" href="#id4">5.5.1. 特定の値を削除する</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

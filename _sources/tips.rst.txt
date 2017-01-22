@@ -53,3 +53,15 @@ tokenによる文字列分割
 unsigned intの桁数取得
 ========================
 .. literalinclude:: cpp/digit/digit.cpp
+
+std::vector
+========================
+特定の値を削除する
+--------------------
+erase-removeイディオムと呼ばれる方法が使える。
+
+::
+
+ v.erase(std::remove(v.begin(),v.end(),100), v.end());//100に一致する要素を削除する。
+
+std::removeは要素の削除を行わない。指定した値に一致する要素をコンテナの末尾に移動してその先頭iteratorを返すだけである。std::vector::eraseは指定した範囲を実際に削除する。このため上述のコードは所望の動作をする。

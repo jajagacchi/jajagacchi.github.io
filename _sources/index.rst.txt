@@ -18,3 +18,6 @@ Contents:
    mod
    integer
    tips 
+  
+コンテスト用雛形：
+:download:`sample.tar.gz`
