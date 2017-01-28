@@ -39,6 +39,33 @@ Tips
 
 std::string
 ========================
+
+文字列検索
+-----------------------
+findメソッドは頭から一致する文字列を検索する。戻り値はstd::string::size_typeで、整数型へのキャストも可能だが、std::string::nposとの比較の際に問題がでうるらしいので面倒くさがらずにsize_type型で受け取るようにすること。
+
+::
+
+ std::string::size_type index =  str.find("abc");
+ if(index == std::string::npos) std::cout << "not find";
+
+rfindは後ろから検索する。
+
+::
+
+ std::string::size_type index =  str.rfind("abc");
+
+文字検索
+--------------------
+文字検索にはfind_first_of、find_last_ofを使う。前者は頭から、後者は後ろから一致する文字を検索する。
+
+::
+
+ std::string::size_type index =  str.find_first_of("abc");
+ std::string::size_type index2 =  str.find_last_of("abc");
+
+これは'a'または'b'又は'c'に一致する最初の位置を返す。
+
 tokenによる文字列分割
 -------------------------
 .. literalinclude:: cpp/split/split.cpp

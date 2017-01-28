@@ -53,8 +53,8 @@
 <div class="section" id="id1">
 <h2>5.1. オーバーフローに注意<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>次のコードはyukicoder No.51の解答例である。</p>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -92,8 +92,29 @@
 </div>
 <div class="section" id="std-string">
 <h2>5.3. std::string<a class="headerlink" href="#std-string" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>5.3.1. 文字列検索<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>findメソッドは頭から一致する文字列を検索する。戻り値はstd::string::size_typeで、整数型へのキャストも可能だが、std::string::nposとの比較の際に問題がでうるらしいので面倒くさがらずにsize_type型で受け取るようにすること。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">index</span> <span class="o">=</span>  <span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">index</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;not find&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>rfindは後ろから検索する。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">index</span> <span class="o">=</span>  <span class="n">str</span><span class="p">.</span><span class="n">rfind</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>5.3.2. 文字検索<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>文字検索にはfind_first_of、find_last_ofを使う。前者は頭から、後者は後ろから一致する文字を検索する。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">index</span> <span class="o">=</span>  <span class="n">str</span><span class="p">.</span><span class="n">find_first_of</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">index2</span> <span class="o">=</span>  <span class="n">str</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>これは&#8217;a&#8217;または&#8217;b&#8217;又は&#8217;c&#8217;に一致する最初の位置を返す。</p>
+</div>
 <div class="section" id="token">
-<h3>5.3.1. tokenによる文字列分割<a class="headerlink" href="#token" title="Permalink to this headline">¶</a></h3>
+<h3>5.3.3. tokenによる文字列分割<a class="headerlink" href="#token" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">split</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">sep</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
@@ -108,8 +129,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h3>5.3.2. 文字列挿入<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>5.3.4. 文字列挿入<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
 <span class="n">str</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;d&quot;</span><span class="p">);</span><span class="c1">//添字2の要素の前に挿入</span>
 </pre></div>
@@ -127,8 +148,8 @@
 </div>
 <div class="section" id="std-vector">
 <h2>5.5. std::vector<a class="headerlink" href="#std-vector" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>5.5.1. 特定の値を削除する<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>5.5.1. 特定の値を削除する<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>erase-removeイディオムと呼ばれる方法が使える。</p>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">100</span><span class="p">),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span><span class="c1">//100に一致する要素を削除する。</span>
 </pre></div>
@@ -150,13 +171,15 @@
 <li><a class="reference internal" href="#id1">5.1. オーバーフローに注意</a></li>
 <li><a class="reference internal" href="#id2">5.2. 小数点切り上げ</a></li>
 <li><a class="reference internal" href="#std-string">5.3. std::string</a><ul>
-<li><a class="reference internal" href="#token">5.3.1. tokenによる文字列分割</a></li>
-<li><a class="reference internal" href="#id3">5.3.2. 文字列挿入</a></li>
+<li><a class="reference internal" href="#id3">5.3.1. 文字列検索</a></li>
+<li><a class="reference internal" href="#id4">5.3.2. 文字検索</a></li>
+<li><a class="reference internal" href="#token">5.3.3. tokenによる文字列分割</a></li>
+<li><a class="reference internal" href="#id5">5.3.4. 文字列挿入</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#unsigned-int">5.4. unsigned intの桁数取得</a></li>
 <li><a class="reference internal" href="#std-vector">5.5. std::vector</a><ul>
-<li><a class="reference internal" href="#id4">5.5.1. 特定の値を削除する</a></li>
+<li><a class="reference internal" href="#id6">5.5.1. 特定の値を削除する</a></li>
 </ul>
 </li>
 </ul>
