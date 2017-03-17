@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. モンテカルロ法で円周率を求める &#8212; jajapro 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="5. Tips" href="../tips.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../tips.html" title="5. Tips"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>6. モンテカルロ法で円周率を求める<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>モンテカルロ法で円周率を求める時、周囲の正方形と内部の円の面積比はどうとるのがよいだろうか。考えてみよう。
+つまり、次の図中にランダムに点を打って点の数を数えて円周率を求める場合にどういう風に正方形の大きさを設定すれば良いか考える。</p>
+<img alt="../_images/fig.svg" src="../_images/fig.svg" /><p>円の半径を<span class="math">\(r\)</span>、正方形の一辺の長さを<span class="math">\(R\)</span>とする。ただし</p>
+<div class="math">
+\[R \geq r\]</div>
+<p>とする。このとき円の中に点が打たれる確率は</p>
+<div class="math">
+\[p_0 = \frac{\pi r^2}{4R^2}\]</div>
+<p>で与えられる。<span class="math">\(N\)</span>点打って<span class="math">\(n\)</span>点が円の中に入る確率は</p>
+<div class="math">
+\[{}_NC_np_0^n(1-p_0)^{N-n}\]</div>
+<p>で与えられる。これは二項分布なので平均、分散はそれぞれ<span class="math">\(Np_0,\;Np_0(1-p_0)\)</span>で与えられる。標準偏差を誤差として採用すれば<span class="math">\(N\)</span>点打った場合に円の中に入っている点の数は</p>
+<div class="math">
+\[Np_0 \pm \sqrt{Np_0(1-p_0)}\]</div>
+<p>と評価できる。これを<span class="math">\(N\)</span>で割れば<span class="math">\(p_0\)</span>の推定値<span class="math">\(\tilde p_0\)</span>が得られ、</p>
+<div class="math">
+\[\tilde p_0 = p_0 \pm \sqrt{\frac{p_0(1-p_0)}{N}}\]</div>
+<p>となる。推定した<span class="math">\(p_0\)</span>に<span class="math">\(\frac{4R^2}{r^2}\)</span>を乗じれば<span class="math">\(\pi\)</span>の推定値<span class="math">\(\tilde\pi\)</span>が得られ、</p>
+<div class="math">
+\[\tilde\pi = p_0\frac{4R^2}{r^2} \pm \sqrt{\frac{p_0(1-p_0)}{N}}\frac{4R^2}{r^2}\]</div>
+<p><span class="math">\(\frac{4R^2}{r^2}=\frac{\pi}{p_0}\)</span>を代入すれば</p>
+<div class="math">
+\[\tilde \pi = \pi \pm \pi\sqrt{\frac{1-p_0}{Np_0}}\]</div>
+<p>誤差項は<span class="math">\(p_0\)</span>に関して短調減少関数である。<span class="math">\(p_0 \leq \frac{\pi}{4}\)</span>であるから<span class="math">\(p_0=\frac{\pi}{4}\)</span>のときが最も推定誤差は小さくなる。このとき</p>
+<div class="math">
+\[R = r\]</div>
+<p>である。おおう、つまんねえ。ちなみに標準偏差プロットすると次のグラフのようになる。</p>
+<img alt="../_images/sigma.png" src="../_images/sigma.png" />
+<p>100万点打ってもまだ3.14あたりをうろうろしとる。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../tips.html"
+                        title="previous chapter">5. Tips</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/pi/pi.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../tips.html" title="5. Tips"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, jajagacchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

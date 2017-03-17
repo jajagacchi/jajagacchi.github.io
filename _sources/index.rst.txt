@@ -17,7 +17,8 @@ Contents:
    graph
    mod
    integer
-   tips 
+   tips
+   pi/pi
   
 コンテスト用雛形：
 :download:`sample.tar.gz`

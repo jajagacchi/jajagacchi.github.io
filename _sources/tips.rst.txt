@@ -92,3 +92,13 @@ erase-removeイディオムと呼ばれる方法が使える。
  v.erase(std::remove(v.begin(),v.end(),100), v.end());//100に一致する要素を削除する。
 
 std::removeは要素の削除を行わない。指定した値に一致する要素をコンテナの末尾に移動してその先頭iteratorを返すだけである。std::vector::eraseは指定した範囲を実際に削除する。このため上述のコードは所望の動作をする。
+
+自作ライブラリ
+===========================
+あると便利かな、と思うメソッドを作ってみた。バグあるかもなので注意。
+
+vector中の各要素の数え上げ
+---------------------------
+.. literalinclude:: cpp/count_elements/main.cpp
+
+戻り値はstd::vector<std::pair<F, int> >でfirstに一致する要素がsecond個あることを表す。

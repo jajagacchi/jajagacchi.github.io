@@ -53,8 +53,8 @@
 <div class="section" id="id1">
 <h2>5.1. オーバーフローに注意<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>次のコードはyukicoder No.51の解答例である。</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text"><span class="math">\(1 \leq W \leq 10^5, 1 \leq D \leq 10^5\)</span></span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -157,6 +157,59 @@
 <p>std::removeは要素の削除を行わない。指定した値に一致する要素をコンテナの末尾に移動してその先頭iteratorを返すだけである。std::vector::eraseは指定した範囲を実際に削除する。このため上述のコードは所望の動作をする。</p>
 </div>
 </div>
+<div class="section" id="id7">
+<h2>5.6. 自作ライブラリ<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>あると便利かな、と思うメソッドを作ってみた。バグあるかもなので注意。</p>
+<div class="section" id="vector">
+<h3>5.6.1. vector中の各要素の数え上げ<a class="headerlink" href="#vector" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">F</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">count_elements</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">F</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">V</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">F</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">V</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	<span class="n">F</span> <span class="n">f0</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+	<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span><span class="p">:</span> <span class="n">v</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">f0</span><span class="o">==</span><span class="n">x</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">count</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span><span class="n">count</span><span class="p">));</span>
+			<span class="n">f0</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+			<span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span><span class="n">count</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+	<span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+	<span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">auto</span> <span class="n">count</span> <span class="o">=</span> <span class="n">count_elements</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+	<span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span><span class="p">:</span> <span class="n">count</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+	
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>戻り値はstd::vector&lt;std::pair&lt;F, int&gt; &gt;でfirstに一致する要素がsecond個あることを表す。</p>
+</div>
+</div>
 </div>
 
 
@@ -180,6 +233,10 @@
 <li><a class="reference internal" href="#unsigned-int">5.4. unsigned intの桁数取得</a></li>
 <li><a class="reference internal" href="#std-vector">5.5. std::vector</a><ul>
 <li><a class="reference internal" href="#id6">5.5.1. 特定の値を削除する</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">5.6. 自作ライブラリ</a><ul>
+<li><a class="reference internal" href="#vector">5.6.1. vector中の各要素の数え上げ</a></li>
 </ul>
 </li>
 </ul>
