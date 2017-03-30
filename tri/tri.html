@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. 三角関数の値ってどうやって求めるんだ？ &#8212; jajapro 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="6. モンテカルロ法で円周率を求める" href="../pi/pi.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../pi/pi.html" title="6. モンテカルロ法で円周率を求める"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>7. 三角関数の値ってどうやって求めるんだ？<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>三角関数表ってどうやって作るんだろう。級数展開で計算するのかな。自分でも試しに三角関数の値計算してみたいけどもうちょっと素朴に手軽に出来ないものか。</p>
+<p>そういうわけで素朴な方法を考えてみた。次の図を見てほしい。</p>
+<img alt="../_images/tri.svg" src="../_images/tri.svg" /><p>単位円の場合は角度<span class="math">\(\theta\)</span>に対応する周長は<span class="math">\(\theta\)</span>なわけだ。ということはだ、ある<span class="math">\(y\)</span>のとこまでの周長がわかれば、<span class="math">\(\sin(\text{周長}) = y\)</span>となるわけだ。</p>
+<p>よっしゃ、周長を積分で求めてやればよいわけだな。簡単のため角度は<span class="math">\([0,\pi/2]\)</span>に限定して<span class="math">\(dl=\sqrt{dx^2+dy^2}=\sqrt{1+(\frac{dx}{dy})^2}dy,\;x^2+y^2=1\)</span>を使ってやれば</p>
+<div class="math">
+\[\int dl = \int_0^{y_0}\sqrt{1+\frac{y^2}{1-y^2}}dy \equiv \theta\]</div>
+<p>となる。<span class="math">\(y_0=\sin\theta\)</span>なのだから</p>
+<div class="math">
+\[\int dl = \int_0^{\sin\theta}\sqrt{1+\frac{y^2}{1-y^2}}dy \equiv \theta\]</div>
+<p>となる。これは<span class="math">\(\sin\theta\)</span>の値を与えるとそれに対応する角度が得られるのだから、<span class="math">\(\arcsin\)</span>になっている。すなわち、</p>
+<div class="math">
+\[\arcsin x = \int_0^{x}\sqrt{1+\frac{y^2}{1-y^2}}dy\]</div>
+<p>が得られた。</p>
+<p>台形積分使った計算コードを示しておく。</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">台形積分使った<span class="math">\(\arcsin\)</span>の実装例</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">double</span> <span class="n">s</span> <span class="o">=</span> <span class="n">atof</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	
+	<span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>
+	<span class="n">sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">+</span><span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">))</span><span class="o">/</span><span class="mf">2.</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">sum</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">sum</span> <span class="o">*=</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="p">;</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;theta = %.15e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>ちなみにコレ使うと<span class="math">\(\pi\)</span>の近似値も計算できるよ。<span class="math">\(\theta=\pi/2\)</span>までの周長求めるみたいなことすればね。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../pi/pi.html"
+                        title="previous chapter">6. モンテカルロ法で円周率を求める</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tri/tri.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../pi/pi.html" title="6. モンテカルロ法で円周率を求める"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, jajagacchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

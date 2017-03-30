@@ -19,6 +19,7 @@ Contents:
    integer
    tips
    pi/pi
+   tri/tri
   
 コンテスト用雛形：
 :download:`sample.tar.gz`
