@@ -19,6 +19,7 @@ Contents:
    integer
    tips
    pi/pi
+   pi2/pi
    tri/tri
   
 コンテスト用雛形：

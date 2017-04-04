@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. 円周率の分数表現を探す &#8212; jajapro 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. 三角関数の値ってどうやって求めるんだ？" href="../tri/tri.html" />
+    <link rel="prev" title="6. モンテカルロ法で円周率を求める" href="../pi/pi.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../tri/tri.html" title="8. 三角関数の値ってどうやって求めるんだ？"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../pi/pi.html" title="6. モンテカルロ法で円周率を求める"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>7. 円周率の分数表現を探す<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>355/113が非常によい円周率の近似値であることはよく知られている。電卓を使って計算してやれば</p>
+<div class="math">
+\[355/113 = 3.14159292035\]</div>
+<p>と驚くべき精度があることがわかる。しかもこの数字は分母から順に1,1,3,3,5,5と、最も小さな奇数から順に二個ずつ並んでいるのが憎らしい。これだけ綺麗な分数は見つかりそうもないが、他の分数表現を探してみようじゃないか。</p>
+<div class="section" id="id2">
+<h2>7.1. 評価基準<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>単純に円周率に近い値が欲しければ例えば<span class="math">\(31415/10000\)</span>のように<span class="math">\(10^n\)</span>で割ってやればよいだけなのでつまらない。355/113が人を感動させるひとつの理由は分子、分母それぞれ3桁しかないのにそれを大きく超える精度で<span class="math">\(\pi\)</span>と一致するからである。そこで、次の評価基準を採用する。</p>
+<div class="math">
+\[\text{err} = \frac{|\pi-m/n|}{({\rm digit}(m)+{\rm digit}(n))/2}\]</div>
+<p>ただし、digit関数は引数の桁を返す関数である。</p>
+</div>
+<div class="section" id="id3">
+<h2>7.2. 結果<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>次のプログラムを用いて探索した。</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">円周率の分数表現探索コード</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">digit</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">log10</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">gcd</span><span class="p">(</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">while</span><span class="p">(</span><span class="n">m</span><span class="o">!=</span><span class="n">n</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">n</span><span class="p">;</span>
+		<span class="k">else</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">m</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">double</span> <span class="n">min_err</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">ans_m</span><span class="p">,</span> <span class="n">ans_n</span><span class="p">;</span>
+	<span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">&quot;err.txt&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">);</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">round</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">M_PI</span><span class="p">);</span>
+		<span class="kt">double</span> <span class="n">err</span> <span class="o">=</span> <span class="n">fabs</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">m</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="o">-</span><span class="n">M_PI</span><span class="p">);</span>
+		<span class="kt">double</span> <span class="n">dig</span> <span class="o">=</span> <span class="p">(</span><span class="n">digit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">digit</span><span class="p">(</span><span class="n">m</span><span class="p">))</span><span class="o">/</span><span class="mf">2.</span><span class="p">;</span>
+		<span class="kt">double</span> <span class="n">err2</span> <span class="o">=</span> <span class="n">err</span> <span class="o">/</span> <span class="n">dig</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">err2</span> <span class="o">&lt;</span> <span class="n">min_err</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">min_err</span> <span class="o">=</span> <span class="n">err2</span><span class="p">;</span>
+			<span class="n">ans_m</span> <span class="o">=</span> <span class="n">m</span><span class="p">;</span>
+			<span class="n">ans_n</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+
+			<span class="c1">//約分</span>
+			<span class="kt">int</span> <span class="n">GCD</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">ans_m</span><span class="p">,</span><span class="n">ans_n</span><span class="p">);</span>
+			<span class="n">ans_m</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
+			<span class="n">ans_n</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="s">&quot;%d %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">n</span><span class="p">,</span> <span class="n">err2</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans_m</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;/&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ans_n</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>分子が1000000未満で探索すると、</p>
+<div class="math">
+\[3126535/995207 = 3.14159265359\]</div>
+<p>と実に11桁に渡って円周率と一致している。それほど感動はないかもしれないが。</p>
+<p>評価値に規則性はあるだろうか。横軸に分母の値、縦軸に評価値をとってプロットしてみる。</p>
+<img alt="../_images/err.png" src="../_images/err.png" />
+<p>お、規則性ありますな。なんでだ。誰か教えてくり。</p>
+</div>
+<div class="section" id="id4">
+<h2>7.3. 他の数学定数<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>例えばネイピア数。分母が1000未満で探索すれば</p>
+<div class="math">
+\[1457/536 = 2.71828358209\]</div>
+<p>となる。分母1000000未満で探索すれば</p>
+<div class="math">
+\[1084483/398959 = 2.71828182846\]</div>
+<p>となる。評価値をプロットしてやれば</p>
+<img alt="../_images/err2.png" src="../_images/err2.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7. 円周率の分数表現を探す</a><ul>
+<li><a class="reference internal" href="#id2">7.1. 評価基準</a></li>
+<li><a class="reference internal" href="#id3">7.2. 結果</a></li>
+<li><a class="reference internal" href="#id4">7.3. 他の数学定数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../pi/pi.html"
+                        title="previous chapter">6. モンテカルロ法で円周率を求める</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tri/tri.html"
+                        title="next chapter">8. 三角関数の値ってどうやって求めるんだ？</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/pi2/pi.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../tri/tri.html" title="8. 三角関数の値ってどうやって求めるんだ？"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../pi/pi.html" title="6. モンテカルロ法で円周率を求める"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jajapro 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, jajagacchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
