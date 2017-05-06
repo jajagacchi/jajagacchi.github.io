@@ -67,17 +67,20 @@
 </div>
 <div class="section" id="id3">
 <h2>7.2. 結果<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>次のプログラムを用いて探索した。</p>
+<p>次のプログラムを用いて100万未満を探索した。</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">円周率の分数表現探索コード</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
 
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">digit</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">log10</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
 <span class="p">}</span>
+
 <span class="kt">int</span> <span class="nf">gcd</span><span class="p">(</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span> <span class="p">)</span>
 <span class="p">{</span>
 	<span class="k">while</span><span class="p">(</span><span class="n">m</span><span class="o">!=</span><span class="n">n</span><span class="p">)</span>
@@ -88,35 +91,56 @@
 	<span class="k">return</span> <span class="n">m</span><span class="p">;</span>
 <span class="p">}</span>
 
+<span class="k">class</span> <span class="nc">Frac</span>
+<span class="p">{</span>
+	<span class="k">public</span><span class="o">:</span>
+	<span class="n">Frac</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">double</span> <span class="n">eval</span><span class="p">)</span><span class="o">:</span> <span class="n">m</span><span class="p">{</span><span class="n">m</span><span class="p">},</span> <span class="n">n</span><span class="p">{</span><span class="n">n</span><span class="p">},</span> <span class="n">eval</span><span class="p">{</span><span class="n">eval</span><span class="p">}</span>
+	<span class="p">{</span>
+	<span class="p">}</span>
+	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">eval</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Frac</span> <span class="o">&amp;</span><span class="n">frac</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">eval</span> <span class="o">&gt;</span> <span class="n">frac</span><span class="p">.</span><span class="n">eval</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
-	<span class="kt">double</span> <span class="n">max_val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">ans_m</span><span class="p">,</span> <span class="n">ans_n</span><span class="p">;</span>
-	<span class="kt">double</span> <span class="n">C</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">);</span>
-	<span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span>
+	<span class="kt">double</span> <span class="n">C</span> <span class="o">=</span> <span class="n">M_PI</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Frac</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="n">Frac</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">frac</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">n</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span>
 	<span class="p">{</span>
-		<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">round</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">C</span><span class="p">);</span>
-		<span class="kt">double</span> <span class="n">eval</span> <span class="o">=</span> <span class="o">-</span><span class="n">log10</span><span class="p">(</span><span class="n">fabs</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">m</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="o">-</span><span class="n">C</span><span class="p">));</span>
-		<span class="kt">double</span> <span class="n">dig</span> <span class="o">=</span> <span class="p">(</span><span class="n">digit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">digit</span><span class="p">(</span><span class="n">m</span><span class="p">))</span><span class="o">/</span><span class="mf">2.</span><span class="p">;</span>
-		<span class="n">eval</span> <span class="o">/=</span> <span class="n">dig</span><span class="p">;</span>
-		<span class="k">if</span><span class="p">(</span><span class="n">eval</span> <span class="o">&gt;</span> <span class="n">max_val</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="n">max_val</span> <span class="o">=</span> <span class="n">eval</span><span class="p">;</span>
-			<span class="n">ans_m</span> <span class="o">=</span> <span class="n">m</span><span class="p">;</span>
-			<span class="n">ans_n</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">tmp_m</span> <span class="o">=</span> <span class="n">round</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">C</span><span class="p">);</span>
+		<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">tmp_n</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
 
-			<span class="c1">//約分</span>
-			<span class="kt">int</span> <span class="n">GCD</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">ans_m</span><span class="p">,</span><span class="n">ans_n</span><span class="p">);</span>
-			<span class="n">ans_m</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
-			<span class="n">ans_n</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
-		<span class="p">}</span>
+		<span class="c1">//約分</span>
+		<span class="kt">int</span> <span class="n">GCD</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">tmp_m</span><span class="p">,</span><span class="n">tmp_n</span><span class="p">);</span>
+		<span class="n">tmp_m</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
+		<span class="n">tmp_n</span> <span class="o">/=</span> <span class="n">GCD</span><span class="p">;</span>
+		<span class="kt">double</span> <span class="n">dig</span> <span class="o">=</span> <span class="p">(</span><span class="n">digit</span><span class="p">(</span><span class="n">tmp_n</span><span class="p">)</span> <span class="o">+</span> <span class="n">digit</span><span class="p">(</span><span class="n">tmp_m</span><span class="p">))</span><span class="o">/</span><span class="mf">2.</span><span class="p">;</span>
+		<span class="kt">double</span> <span class="n">eval</span> <span class="o">=</span> <span class="o">-</span><span class="n">log10</span><span class="p">(</span><span class="n">fabs</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">tmp_m</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">tmp_n</span><span class="o">-</span><span class="n">C</span><span class="p">))</span> <span class="o">/</span> <span class="n">dig</span><span class="p">;</span>
+		<span class="n">frac</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">Frac</span><span class="p">(</span><span class="n">tmp_m</span><span class="p">,</span><span class="n">tmp_n</span><span class="p">,</span><span class="n">eval</span><span class="p">));</span>
 	<span class="p">}</span>
-	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans_m</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;/&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ans_n</span><span class="p">;</span>
+	
+	<span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">f</span><span class="p">:</span> <span class="n">frac</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">eval</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+	<span class="p">}</span>
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
+<p>結果発表！！</p>
+<p>1位：355/113 評価値=2.19129</p>
+<p>2位: 22/7 評価値=1.93206</p>
+<p>3位: 312689/99532 評価値=1.91554</p>
+<p>おおう！355/113すごいな！22/7も大健闘！円周率の連分数表現の最初の方が大健闘という結果。</p>
+<p>このプログラムは円周率以外でも使える。例えばネイピア数。</p>
+<p>49171/18089が最も評価値が高い。あと目立ったのは193/71。これもやはり連分数表現から出てくるらしい。</p>
 </div>
 </div>
 
